@@ -62,6 +62,24 @@
     .quality-fine     { --rc: #38bdf8; }  /* 精良：天蓝 */
     .quality-perfect  { --rc: #c084fc; }  /* 完美：亮紫 */
     .quality-pristine { --rc: #fbbf24; }  /* 至臻：鎏金 */
+    .quality-collectible { --rc: #e879f9; }  /* 典藏：辉品红(兜底) */
+    /* 典藏专属:流动彩虹文字 + 彩虹边框(每件典藏的排面) */
+    .rainbow-text {
+      background: linear-gradient(90deg, #f87171, #fbbf24, #34d399, #38bdf8, #a78bfa, #f472b6, #f87171);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rainbowShift 4s linear infinite;
+    }
+    @keyframes rainbowShift { 0% { background-position: 0% 0; } 100% { background-position: 300% 0; } }
+    .quality-collectible { border-image: linear-gradient(135deg, #f87171, #fbbf24, #34d399, #38bdf8, #a78bfa, #f472b6) 1; }
+    .collectible-flash { animation: collectibleFlash 1.5s ease-in-out both; }
+    @keyframes collectibleFlash {
+      0%, 100% { box-shadow: none; }
+      20%, 60% { box-shadow: 0 0 22px rgba(232, 121, 249, 0.9), 0 0 44px rgba(56, 189, 248, 0.5); filter: brightness(1.4) saturate(1.4); }
+      40%, 80% { box-shadow: 0 0 30px rgba(251, 191, 36, 0.9), 0 0 52px rgba(244, 114, 182, 0.6); filter: brightness(1.6) hue-rotate(40deg); }
+    }
 
     /* 区域解锁:格子按对角线波次点亮(左上 → 右下),配合 unlockFx 标记一次性播放 */
     @keyframes cellReveal {
@@ -111,6 +129,82 @@
     }
     /* 黑金下横幅分隔线 */
     .blackgold-on .bg-banner { border-bottom: 1px solid rgba(251, 191, 36, 0.22); }
+
+    /* —— 新手教程:目标高亮脉冲 —— */
+    .tutorial-highlight {
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.9), 0 0 26px rgba(251, 191, 36, 0.5) !important;
+      border-radius: 12px;
+      animation: tutPulse 1.6s ease-in-out infinite;
+      position: relative;
+      z-index: 50;
+    }
+    @keyframes tutPulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.9), 0 0 20px rgba(251, 191, 36, 0.4); }
+      50%      { box-shadow: 0 0 0 5px rgba(251, 191, 36, 0.7), 0 0 34px rgba(251, 191, 36, 0.65); }
+    }
+
+    /* —— 挖掘完成反馈:现场飘字 / 金色粒子 / 金框闪烁 / 全屏大字 —— */
+    .dig-float {
+      position: absolute; left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 900; font-size: 17px; white-space: nowrap;
+      text-shadow: 0 0 12px currentColor, 0 2px 4px rgba(0, 0, 0, 0.8);
+      pointer-events: none; z-index: 30;
+      animation: digFloatUp 1.5s ease-out forwards;
+    }
+    @keyframes digFloatUp {
+      0%   { opacity: 0; transform: translate(-50%, -30%) scale(0.85); }
+      15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+      70%  { opacity: 1; transform: translate(-50%, -58%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -85%) scale(1); }
+    }
+    .gold-particle {
+      position: absolute; width: 6px; height: 6px; border-radius: 50%;
+      background: radial-gradient(circle, #fde68a 20%, #f59e0b 80%);
+      box-shadow: 0 0 8px rgba(251, 191, 36, 0.95);
+      transform: translate(-50%, -50%);
+      animation: goldBurst 0.9s ease-out forwards;
+    }
+    @keyframes goldBurst {
+      0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.35); }
+    }
+    .gold-flash { animation: goldFlash 1s ease-in-out both; }
+    @keyframes goldFlash {
+      0%, 100% { box-shadow: none; }
+      25%, 75% { box-shadow: 0 0 16px rgba(251, 191, 36, 0.95); filter: brightness(1.35); }
+      50%      { box-shadow: 0 0 26px rgba(251, 191, 36, 1); filter: brightness(1.6); }
+    }
+    /* 镐子悬停预览:绿 = 将挖开,灰 = 已挖/越界 */
+    .pick-preview-ok {
+      border-color: #34d399 !important;
+      background: rgba(52, 211, 153, 0.22) !important;
+      box-shadow: inset 0 0 8px rgba(52, 211, 153, 0.35);
+    }
+    .pick-preview-no {
+      border-color: rgba(148, 163, 184, 0.35) !important;
+      background: rgba(148, 163, 184, 0.1) !important;
+    }
+    .screen-banner {
+      position: fixed; inset: 0; z-index: 80;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      animation: bannerDim 2.2s ease-out forwards;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55), transparent 62%);
+    }
+    .screen-banner-text {
+      font-size: 46px; font-weight: 900; letter-spacing: 0.08em;
+      color: #fde68a; text-shadow: 0 0 26px rgba(251, 191, 36, 0.85), 0 3px 8px rgba(0, 0, 0, 0.85);
+      animation: bannerText 2.2s ease-out forwards;
+    }
+    @keyframes bannerDim { 0% { opacity: 0; } 14% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes bannerText {
+      0%   { opacity: 0; transform: scale(0.72); }
+      12%  { opacity: 1; transform: scale(1.09); }
+      22%  { transform: scale(1); }
+      80%  { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1) translateY(-16px); }
+    }
 
     .exhibit-card { border-color: color-mix(in srgb, var(--rc) 35%, transparent); }
     .exhibit-card:hover {
@@ -290,14 +384,6 @@
         <p class="mt-3 text-[11px] leading-relaxed text-slate-500">⚖️ 票价越高游客越少；免费开放能拉满客流，但门票收入归零、维护费照付 —— 盈亏自己掂量。</p>
       </section>
 
-      <!-- 研究所:分解碎片 → 永久加成 -->
-      <section class="panel">
-        <h2 class="panel-title">🔬 研究所</h2>
-        <button id="btn-research" class="w-full rounded-xl border border-sky-400/50 bg-sky-500/10 px-3 py-2.5 text-xs font-bold text-sky-300 transition hover:bg-sky-500/20">
-          🔬 打开研究面板（碎片 → 永久加成）
-        </button>
-        <p class="mt-2 text-[11px] leading-relaxed text-slate-500">⚗️ 在仓库「分解」展品获得历史碎片，投入研究换取永久加成 —— 探索 → 分解 → 研究 → 反哺探索。</p>
-      </section>
     </aside>
 
     <!-- ======================== 中：分馆地图 + 展区视图 ======================== -->
@@ -318,12 +404,14 @@
 
     <!-- ======================== 右：仓库 / 背包 / 商人（标签页） ======================== -->
     <aside class="panel flex flex-col">
-      <!-- 右侧标签页切换（商人 Tab 仅到访当日可见） -->
-      <div class="mb-3 grid grid-cols-3 gap-2">
+      <!-- 右侧标签页切换:仓库 / 背包 / 研究(常驻第 3 位)/ 商人(到访当日出现在末位,4 列布局) -->
+      <div id="right-tabs" class="mb-3 grid grid-cols-3 gap-2">
         <button data-right-tab="warehouse"
           class="rounded-lg border px-2 py-2 text-xs font-bold transition">📦 仓库</button>
         <button data-right-tab="bag"
           class="rounded-lg border px-2 py-2 text-xs font-bold transition">🎒 背包</button>
+        <button data-right-tab="research"
+          class="rounded-lg border px-2 py-2 text-xs font-bold transition">🔬 研究</button>
         <button data-right-tab="merchant"
           class="hidden rounded-lg border px-2 py-2 text-xs font-bold transition">🧙 商人</button>
       </div>
@@ -410,7 +498,11 @@
         </div>
       </div>
       <div id="dig-hint" class="mt-2 rounded-lg border border-night-700/70 bg-night-800/60 px-3 py-1.5 text-[11px] leading-relaxed text-slate-400"></div>
-      <div id="dig-grid" class="mt-3 grid grid-cols-6 gap-1"></div>
+      <div class="relative">
+        <div id="dig-grid" class="mt-3 grid grid-cols-6 gap-1"></div>
+        <div id="dig-fx-host" class="pointer-events-none absolute inset-0 z-20 overflow-visible"></div>
+        <div id="dig-float-host" class="pointer-events-none absolute inset-0 z-30 overflow-visible"></div>
+      </div>
       <div class="mt-3 flex items-center justify-between gap-2">
         <button id="btn-dig-end" class="rounded-lg border border-night-600 px-3 py-2 text-xs font-bold text-slate-300 transition hover:text-slate-100">🧹 结束探索（带走已出土）</button>
         <button id="btn-dig-more" class="hidden rounded-lg border border-gold-500/60 bg-gold-500/10 px-3 py-2 text-xs font-bold text-gold-300 transition hover:bg-gold-500/20">⛏️ 续挖</button>
@@ -476,6 +568,42 @@
     </div>
   </div>
 
+  <!-- 新手教程:开场信 -->
+  <div id="tutorial-letter" class="fixed inset-0 z-[72] hidden items-center justify-center bg-night-950/95 backdrop-blur-sm">
+    <div class="mx-4 w-full max-w-lg rounded-2xl border border-gold-400/40 bg-[#151310] p-7 shadow-2xl">
+      <p class="text-[10px] uppercase tracking-[0.4em] text-slate-600">A Letter From The Former Curator</p>
+      <h2 class="mt-2 font-serif text-2xl font-black tracking-widest text-gold-300">前任馆长的信</h2>
+      <div class="mt-5 space-y-3 font-serif text-[15px] leading-loose text-slate-300">
+        <p>你就是博物馆的新馆长啊……欢迎。</p>
+        <p>10 年前那场事故后，展品散落一空，只剩大厅里的这几件了。</p>
+        <p>如果是你的话，假以时日……我相信能见到比以往任何时刻还要辉煌的这所博物馆。</p>
+      </div>
+      <div class="mt-6 text-right">
+        <span class="text-xs text-slate-500">—— 前任馆长</span>
+      </div>
+      <button id="btn-letter-accept" class="mt-5 w-full rounded-xl border border-gold-400/60 bg-gold-500/10 px-4 py-3 text-sm font-black tracking-widest text-gold-300 transition hover:bg-gold-500/25 active:scale-95">✍️ 接手</button>
+    </div>
+  </div>
+
+  <!-- 新手教程:引导浮窗(定位到目标元素附近) -->
+  <div id="tutorial-tip" class="fixed z-[75] hidden w-[340px] rounded-xl border border-gold-400/60 bg-night-900 p-4 shadow-2xl">
+    <p id="tutorial-tip-text" class="text-[13px] leading-relaxed text-slate-200"></p>
+    <div class="mt-2 flex items-center justify-between">
+      <span class="text-[10px] text-gold-500">💰 完成引导 +100 金币</span>
+      <button data-tutorial-skip class="text-[10px] text-slate-500 underline transition hover:text-slate-300">跳过教程</button>
+    </div>
+  </div>
+
+  <!-- 一次性系统解锁弹窗 -->
+  <div id="onetip-modal" class="fixed inset-0 z-[66] hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div class="mx-4 w-full max-w-md rounded-2xl border border-sky-400/40 bg-night-900 p-6 shadow-2xl">
+      <p class="text-[10px] uppercase tracking-[0.4em] text-slate-600">Curator's Notes</p>
+      <h3 class="mt-1 font-serif text-lg font-black tracking-widest text-sky-300">馆长笔记</h3>
+      <p id="onetip-text" class="mt-3 text-[13px] leading-relaxed text-slate-200"></p>
+      <button id="btn-onetip-ok" class="mt-5 w-full rounded-xl border border-sky-400/60 bg-sky-500/10 px-4 py-2.5 text-xs font-bold text-sky-300 transition hover:bg-sky-500/20">知道了</button>
+    </div>
+  </div>
+
   <!-- 研究面板:碎片 → 永久加成 -->
   <div id="research-modal" class="fixed inset-0 z-[56] hidden items-center justify-center bg-black/70 backdrop-blur-sm">
     <div class="mx-4 w-full max-w-2xl rounded-2xl border border-sky-400/40 bg-night-900 p-6 shadow-2xl">
@@ -534,12 +662,13 @@
      * 残片虽吸引不了游客，但它是未来「修复系统」的原材料。
      * ---------------------------------------------------------- */
     const QUALITY = {
-      fragment: { label: '残片', note: '修复系统的原材料' },
-      damaged:  { label: '破损', note: '勉强能看' },
-      standard: { label: '普通', note: '完好无损' },
-      fine:     { label: '精良', note: '品相出众' },
-      perfect:  { label: '完美', note: '几乎无瑕' },
-      pristine: { label: '至臻', note: '极品，带飞全馆收入' },
+      fragment:    { label: '残片', note: '修复系统的原材料' },
+      damaged:     { label: '破损', note: '勉强能看' },
+      standard:    { label: '普通', note: '完好无损' },
+      fine:        { label: '精良', note: '品相出众' },
+      perfect:     { label: '完美', note: '几乎无瑕' },
+      pristine:    { label: '至臻', note: '极品，带飞全馆收入' },
+      collectible: { label: '典藏', note: '有且仅有十件的传说之藏,仅满探索新模式与五星评级可得' },
     };
 
     /* ----------------------------------------------------------
@@ -553,12 +682,14 @@
       fine:     60,
       perfect:  120,
       pristine: 240,
+      collectible: 600,   // 典藏兜底值(实际基础吸引力由每件典藏藏品自带 baseAppeal 定义)
     };
 
     // 品阶序列工具:幸运护符(升一档)/ 考古笔记(保底精良)用
-    const QUALITY_ORDER = ['fragment', 'damaged', 'standard', 'fine', 'perfect', 'pristine'];
+    const QUALITY_ORDER = ['fragment', 'damaged', 'standard', 'fine', 'perfect', 'pristine', 'collectible'];
     function upgradeQuality(q) {
-      return QUALITY_ORDER[Math.min(QUALITY_ORDER.indexOf(q) + 1, QUALITY_ORDER.length - 1)];
+      if (q === 'collectible') return q;   // 典藏是顶点,任何"升档"效果都不作用
+      return QUALITY_ORDER[Math.min(QUALITY_ORDER.indexOf(q) + 1, QUALITY_ORDER.indexOf('pristine'))];
     }
     function isQualityAtLeast(q, base) {
       return QUALITY_ORDER.indexOf(q) >= QUALITY_ORDER.indexOf(base);
@@ -637,6 +768,7 @@
      */
     const RESEARCH_SPECIAL_REQ = [20, 50, 100];
     const RESEARCH_GENERAL_REQ = [30, 80, 150];
+    const RESEARCH_EXPLORE_REQ = [30, 80, 150];   // 探索研究:消耗任意碎片(与总研究一致)
     const SPECIAL_LV_TEXT = [
       '该标签展品基础吸引力 +25%，且成色至少为「破损」（不再出现残片）',
       '探索产出该标签藏品时，成色至少为「普通」（不再出现残片/破损），且高品阶权重增加',
@@ -646,6 +778,11 @@
       '全馆吸引力 +15%，仓库容量 +10',
       '门票收入 +25%，游客容量 +30',
       '所有区域探索高品阶权重 +20%，解锁中央大厅「黑金外观」，所有地标加成额外 +25%',
+    ];
+    const EXPLORE_LV_TEXT = [
+      '镐子一次挖 2 格（横 2），且每日第一次探索免费',
+      '镐子一次挖 3 格（横 3），挖掘现场初始显示随机一个宝藏轮廓，每场初始挖掘次数 +2',
+      '镐子升级为 1×4（每次挖掘仍只消耗 1 次）',
     ];
     const CURATOR_TEXT = {
       resonance: { name: '共鸣', desc: '该展馆内，与主导标签相同的展品吸引力 +30%' },
@@ -733,7 +870,7 @@
       rating_2: { name: '石剑钥匙',     icon: '🗝️', shape: [[1, 1]],                                                   tags: ['history', 'art'], quality: 'fine' },
       rating_3: { name: '奠基者的怀表', icon: '⏱️', shape: [[1, 1], [1, 1]],                                           tags: ['art', 'history'], quality: 'perfect' },
       rating_4: { name: '王朝玉玺',     icon: '🪧', shape: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],                           tags: ['history'],        quality: 'pristine' },
-      rating_5: { name: '文明之火',     icon: '🔥', shape: [[0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [1, 1, 1, 1, 1], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0]], tags: ['paleo', 'fauna', 'art', 'history', 'geo', 'flora'], quality: 'pristine' },
+      rating_5: { name: '文明之火',     icon: '🔥', shape: [[0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [1, 1, 1, 1, 1], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0]], tags: ['paleo', 'fauna', 'art', 'history', 'geo', 'flora'], quality: 'collectible', baseAppeal: 900 },
     };
 
     /* ----------------------------------------------------------
@@ -938,7 +1075,12 @@
       rightTab: 'warehouse',  // 右侧面板当前标签页:'warehouse' | 'bag'
       activeEffects: { nextQuality: 0, multiDrop: 0 }, // 探索增益:黄金眼剩余次数 / 藏宝图剩余次数
       pendingDigEffects: { extraDigs: 0, firstUpgrade: false, revealAll: false, dynamite: false, guaranteeFine: false }, // 挖掘增益:下一次挖掘生效,挖掘结束清空
-      research: { special: { paleo: 0, fauna: 0, flora: 0, geo: 0, history: 0, art: 0 }, general: 0 }, // 研究等级(永久,不可重置)
+      research: { special: { paleo: 0, fauna: 0, flora: 0, geo: 0, history: 0, art: 0 }, general: 0, explore: 0 }, // 研究等级(永久,不可重置);explore = 探索研究线(镐子/免费/加次数)
+      freeExploreDay: 0,   // 【探索研究 Lv1】今日首次探索免费的标记(记录哪一天用过)
+      secretSinceRelic: 0, // 【秘境寻珍】自上次典藏起已进行的秘境场数(25 场保底典藏)
+      tutorialStep: 0,     // 【新手教程】0 未接手 / 1 去探索 / 2 挖掘 / 3 上架 / 4 Day1 完 / 5 动线 / 6 门票 / 7 完
+      tutorialSkipped: false, // 跳过教程后不再显示引导
+      seenTips: {},        // 一次性系统解锁弹窗(已见标记)
       curator: {},   // 大师策展:zoneId → { effect: 'resonance'|'inclusion'|'focus', tag: 主导标签 }
       blackGold: {}, // 黑金外观:zoneId → true(外观复原可切换)
       itemTargeting: null,    // 道具目标选择模式:{ item } — 罗盘/加速器需要指定区域
@@ -990,10 +1132,12 @@
      * ========================================================== */
     const $ = (sel) => document.querySelector(sel);
     const fmt = (n) => n.toLocaleString('zh-CN');
-    // 最终吸引力 = 稀有度基础值 × 个体波动 × 标签系数(取最高,不叠加) × 尺寸系数 —— 四因子相乘,件件独一无二
+    // 最终吸引力 = 基础值 × 个体波动 × 标签系数(取最高,不叠加) × 尺寸系数 —— 四因子相乘,件件独一无二
+    // 基础值:普通藏品走 RARITY_BASE 品阶表;典藏藏品由自身 baseAppeal 定义(十件各不相同)
     function effAppeal(it) {
       const tagCoef = it.tags.length ? Math.max(...it.tags.map((k) => TAG_COEFFICIENT[k] ?? 1)) : 1;
-      return Math.round(RARITY_BASE[it.quality] * it.individualFactor * tagCoef * getSizeCoefficient(it.shape));
+      const base = it.quality === 'collectible' ? (it.baseAppeal ?? 600) : RARITY_BASE[it.quality];
+      return Math.round(base * it.individualFactor * tagCoef * getSizeCoefficient(it.shape));
     }
 
     // 顶栏
@@ -1150,8 +1294,14 @@
     // 全馆总吸引力面板（左栏）+ 连通率
     // 调用时机：启动 / 探索 / 切换展区 / 结算 / 上架撤下 / 动线保存。
     function renderAppealStats() {
-      $('#total-appeal').textContent = fmt(getTotalAppeal());
+      const total = getTotalAppeal();
+      $('#total-appeal').textContent = fmt(total);
       $('#connect-rate').textContent = `${getConnectivity()}%`;
+      // 【一次性】下一级评级的【四项要求全部符合】→ 提示评级系统(高亮顶栏评级按钮)
+      const cur = state.museumGrade ?? 0;
+      if (cur < GRADE_DEFS.length && gradeReqsMet(GRADE_DEFS[cur])) {
+        oneTip('grade', '你的博物馆似乎可以评级了？', '#btn-grade');
+      }
     }
 
     /* ==========================================================
@@ -1377,8 +1527,12 @@
               (!down && !left) ? 'rounded-bl-md' : '',
               (!down && !right) ? 'rounded-br-md' : '',
             ].join(' ');
+            // 【典藏】底板 = 静态彩虹渐变(低饱和暗调,可读性优先);其它品阶 = 品阶色 20% 混合
+            const blockBg = it.quality === 'collectible'
+              ? 'linear-gradient(135deg, rgba(248,113,113,0.30), rgba(251,191,36,0.26), rgba(52,211,153,0.26), rgba(56,189,248,0.28), rgba(167,139,250,0.30), rgba(244,114,182,0.30))'
+              : 'linear-gradient(color-mix(in srgb, var(--rc) 20%, transparent), color-mix(in srgb, var(--rc) 20%, transparent))';
             cells += `
-              <div style="grid-area:${gr + 1} / ${gc + 1}; border-top-style:${side(up)};border-right-style:${side(right)};border-bottom-style:${side(down)};border-left-style:${side(left)};border-color: var(--rc); background: color-mix(in srgb, var(--rc) 20%, #10141f);"
+              <div style="grid-area:${gr + 1} / ${gc + 1}; border-top-style:${side(up)};border-right-style:${side(right)};border-bottom-style:${side(down)};border-left-style:${side(left)};border-color: var(--rc); background-color: #10141f; background-image: ${blockBg};"
                 class="quality-${it.quality} relative z-10 pointer-events-none flex items-center justify-center ${connected ? '' : 'opacity-40 grayscale'} ${corners}"></div>`;
           }
         }
@@ -1396,7 +1550,7 @@
               class="pointer-events-auto absolute right-0.5 top-0.5 rounded border border-night-600 bg-night-950/80 px-1 text-[9px] font-bold text-slate-400 transition hover:border-red-400/60 hover:text-red-300">撤</button>
             <span class="text-lg leading-none ${connected ? '' : 'opacity-60'}">${it.icon}</span>
             <span class="w-full truncate px-0.5 text-center text-[9px] leading-tight text-slate-300">${it.name}</span>
-            <span class="text-[9px] font-bold" style="color: var(--rc)">${QUALITY[it.quality].label} · ✨${fmt(effAppeal(it))}</span>
+            <span class="text-[9px] font-bold ${it.quality === 'collectible' ? 'rainbow-text' : ''}" ${it.quality === 'collectible' ? '' : 'style="color: var(--rc)"'}>${QUALITY[it.quality].label} · ✨${fmt(effAppeal(it))}</span>
             ${connected ? '' : '<span class="absolute bottom-0.5 left-0.5 rounded bg-red-900/70 px-1 text-[8px] font-bold text-red-300">未连通</span>'}
           </div>`;
       }
@@ -1536,6 +1690,7 @@
     const salvageSel = new Set();
 
     function salvageYieldOf(it) {
+      if (it.quality === 'collectible' || it.rating) return null;   // 典藏/评级展品:不可分解
       const relicId = TAG_TO_RELIC[it.tags[0]];
       return relicId ? { relicId, n: SALVAGE_YIELD[it.quality] ?? 1 } : null;
     }
@@ -1544,13 +1699,22 @@
       salvageMode = !salvageMode;
       salvageSel.clear();
       renderWarehouse();
-      if (salvageMode) toast('⚗️ 分解模式：选取要分解的展品（多标签展品产出第一个标签的碎片），确认后不可恢复！');
+      if (salvageMode) {
+        toast('⚗️ 分解模式：选取要分解的展品（多标签展品产出第一个标签的碎片），确认后不可恢复！');
+        // 【一次性】首次分解 → 提示研究系统(高亮研究 Tab)
+        oneTip('salvage', '分解不需要的展品可以获得历史碎片，用于研究项目，建设博物馆。', '[data-right-tab="research"]');
+      }
     }
 
     function toggleSalvageItem(itId) {
       const id = Number(itId);   // dataset 传来的是字符串 —— 台账 id 是数字,必须归一
-      if (state.items[id]?.rating) {
+      const item = state.items[id];
+      if (item?.rating) {
         toast('🏅 评级专属展品是博物馆的镇馆之宝 —— 不可分解', true);
+        return;
+      }
+      if (item?.quality === 'collectible') {
+        toast('👑 典藏藏品是博物馆的终极收藏 —— 不可分解', true);
         return;
       }
       if (salvageSel.has(id)) salvageSel.delete(id);
@@ -1573,7 +1737,7 @@
     }
 
     function salvageConfirm() {
-      const items = getWarehouseItems().filter((it) => salvageSel.has(it.id) && !it.rating);   // 双保险:评级展品永不分解
+      const items = getWarehouseItems().filter((it) => salvageSel.has(it.id) && !it.rating && it.quality !== 'collectible');   // 双保险:评级/典藏永不分解
       if (!items.length) {
         toast('⚗️ 还没选取任何展品', true);
         return;
@@ -1615,32 +1779,35 @@
         ? it.tags.map((k) => `
             <span class="rounded border border-night-600/80 bg-night-800/60 px-1 py-px text-[10px] text-slate-400">${TAGS[k].icon}${TAGS[k].label}</span>`).join('')
         : '<span class="rounded border border-night-600/80 bg-night-800/60 px-1 py-px text-[10px] text-slate-500">❓未鉴定</span>';
-      // 分解模式:右侧按钮换成选取/已选(评级展品不可分解),并预览产出
-      const y = it.rating ? null : salvageYieldOf(it);
+      // 分解模式:右侧按钮换成选取/已选(评级/典藏展品不可分解),并预览产出
+      const noSalvage = it.rating || it.quality === 'collectible';
+      const guardLabel = it.rating ? '🏅 不可分解' : '👑 不可分解';
+      const y = noSalvage ? null : salvageYieldOf(it);
       const actionBtn = salvageMode
-        ? (it.rating
-          ? `<span class="shrink-0 rounded-lg border border-purple-400/40 bg-purple-500/10 px-2.5 py-1.5 text-xs font-bold text-purple-300" title="评级专属展品,不可分解">🏅 不可分解</span>`
+        ? (noSalvage
+          ? `<span class="shrink-0 rounded-lg border ${it.rating ? 'border-purple-400/40 bg-purple-500/10 text-purple-300' : 'border-fuchsia-400/40 bg-fuchsia-500/10 text-fuchsia-300'} px-2.5 py-1.5 text-xs font-bold" title="不可分解">${guardLabel}</span>`
           : `<button data-salvage-toggle="${it.id}"
             class="shrink-0 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition ${salvageSel.has(it.id) ? 'border-red-400 bg-red-500/15 text-red-300' : 'border-night-600 bg-night-700/60 text-slate-300 hover:border-red-400/60'}">${salvageSel.has(it.id) ? '✓ 已选' : '选取'}</button>`)
         : `<button data-shelve-id="${it.id}"
             class="shrink-0 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition ${state.placing === it.id ? 'border-gold-400 bg-gold-500/10 text-gold-300' : 'border-night-600 bg-night-700/60 text-slate-300 hover:border-gold-400/60 hover:text-gold-300'}">${state.placing === it.id ? '取消' : '上架'}</button>`;
-      const yieldChip = salvageMode && y && !it.rating
+      const yieldChip = salvageMode && y
         ? `<span class="rounded border border-amber-400/40 bg-amber-500/10 px-1 py-px text-[10px] text-amber-300">⚗️ ${RELIC_DEFS[y.relicId].icon}×${y.n}</span>`
         : '';
-      // 分解模式高亮:已选卡片红光描边 + 微红底,一眼区分;评级展品紫边标保护
+      // 分解模式高亮:已选卡片红光描边 + 微红底,一眼区分;评级/典藏展品紫边标保护
       const picked = salvageMode && salvageSel.has(it.id);
-      const ratingGuard = salvageMode && it.rating;
+      const ratingGuard = salvageMode && noSalvage;
+      const guardTag = it.rating ? '🏅评级专属' : '👑典藏';
       const cardCls = picked
         ? 'ring-2 ring-red-400/70 border-red-400/60 bg-red-500/5'
         : ratingGuard
-          ? 'border-purple-400/50 bg-purple-500/5'
+          ? (it.rating ? 'border-purple-400/50 bg-purple-500/5' : 'border-fuchsia-400/50 bg-fuchsia-500/5')
           : 'border-night-700/80 bg-night-800/70';
       return `
         <li class="quality-${it.quality} flex items-center gap-3 rounded-xl border ${cardCls} px-3 py-2.5 transition ${picked || ratingGuard ? '' : 'hover:border-slate-500/40'}">
           <span class="text-2xl ${picked ? '' : salvageMode && !ratingGuard ? 'opacity-70' : ''}">${it.icon}</span>
           <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-bold ${picked ? 'text-red-200' : 'text-slate-100'}">${picked ? '✓ ' : ''}${it.name}${ratingGuard ? ' <span class="text-[10px] text-purple-300">🏅评级专属</span>' : ''}</p>
-            <p class="text-[11px] font-medium" style="color: var(--rc)">${q.label} · ✨ ${fmt(effAppeal(it))} · 📐 占 ${cells} 格</p>
+            <p class="truncate text-sm font-bold ${picked ? 'text-red-200' : 'text-slate-100'}">${picked ? '✓ ' : ''}${it.name}${ratingGuard ? ` <span class="text-[10px] ${it.rating ? 'text-purple-300' : 'text-fuchsia-300'}">${guardTag}</span>` : ''}</p>
+            <p class="text-[11px] font-medium ${it.quality === 'collectible' ? 'rainbow-text font-bold' : ''}" ${it.quality === 'collectible' ? '' : 'style="color: var(--rc)"'}>${q.label} · ✨ ${fmt(effAppeal(it))} · 📐 占 ${cells} 格</p>
             <div class="mt-0.5 flex flex-wrap gap-1">${tagChips}${yieldChip}</div>
           </div>
           ${actionBtn}
@@ -1683,7 +1850,10 @@
       $('#panel-warehouse').classList.toggle('hidden', tab !== 'warehouse');
       $('#panel-bag').classList.toggle('hidden', tab !== 'bag');
       $('#panel-merchant').classList.toggle('hidden', tab !== 'merchant');
-      // 商人 Tab 仅到访当日可见;离场时若正看着商人页,自动切回仓库
+      // 商人 Tab 仅到访当日可见;在场时标签页切 4 列(仓库/背包/研究/商人),离场 3 列
+      const tabWrap = $('#right-tabs');
+      tabWrap.classList.toggle('grid-cols-4', !!state.merchant.active);
+      tabWrap.classList.toggle('grid-cols-3', !state.merchant.active);
       const merchantTab = document.querySelector('[data-right-tab="merchant"]');
       merchantTab.classList.toggle('hidden', !state.merchant.active);
       if (!state.merchant.active && tab === 'merchant') {
@@ -1926,7 +2096,15 @@
       const pct = (price / Number(slider.max)) * 100;
       slider.style.background = `linear-gradient(to right, #f5c257 ${pct}%, #2e374f ${pct}%)`;
     }
-    slider.addEventListener('input', updatePriceUI);
+    slider.addEventListener('input', () => {
+      updatePriceUI();
+      // 【新手教程】step 6 → 7:门票调整完成,教程收官
+      if (state.tutorialStep === 6) {
+        advTutorial(7, '每天只能改一次动线，要想好哦？');
+        hideTutorialTip();   // 教程收官,收起浮窗
+        toast('🎓 新手教程完成！后面的系统会在解锁时给你提示 —— 去建立你的博物馆帝国吧');
+      }
+    });
 
     // 左栏盈亏预估面板：客流(含容量封顶) / 预估收入 / 固定成本 / 净预估。
     // 刷新时机：启动 / 滑块 / 探索 / 上架(未来) / 展区解锁(未来) —— 凡影响收支的变更后都刷。
@@ -2116,7 +2294,29 @@
       quick: { label: '走马观花', cost: 100,  digs: 5,  digMoreCost: 200, exploreGain: 1, qualityBoost: {} },
       deep:  { label: '深入探寻', cost: 500,  digs: 8,  digMoreCost: 500, exploreGain: 2, qualityBoost: { fine: 2, perfect: 2 } },
       dig:   { label: '掘地三尺', cost: 1000, digs: 12, digMoreCost: 800, exploreGain: 3, qualityBoost: { perfect: 2, pristine: 2 } },
+      // —— 满探索(Lv3)专属新模式:8×8 现场 ——
+      precision: { label: '精密勘察', cost: 3000, digs: 12, digMoreCost: 2500, exploreGain: 6, size: 8,
+                   qualityBoost: { fine: 2.5, perfect: 3, pristine: 2.5 }, collectibleChance: 0.01 },
+      secret:    { label: '秘境寻珍', cost: 8000, digs: 15, digMoreCost: 5000, exploreGain: 10, size: 8,
+                   qualityBoost: { fine: 3, perfect: 3.5, pristine: 3.5 }, collectibleChance: 0.03 },
     };
+
+    /* —— 典藏藏品(COLLECTIBLE_POOL):可挖掘的九件,quality 恒为 'collectible' ——
+     * 不参与随机品阶系统(其它藏品也不会出典藏);baseAppeal = 自带基础吸引力(替代 RARITY_BASE)。
+     * 获取途径:「精密勘察 / 秘境寻珍」挖掘;第十件「文明之火」为五星评级专属(RATING_EXHIBITS.rating_5)。
+     * 不可分解、不可出售(与评级展品同保护)。
+     */
+    const COLLECTIBLE_POOL = [
+      { name: '罗塞塔石碑原石', icon: '🗿', tags: ['history'],    baseAppeal: 820, shape: [[1, 1, 1], [1, 1, 1], [1, 1, 1]] },
+      { name: '图坦卡蒙黄金面具', icon: '👑', tags: ['history', 'art'], baseAppeal: 880, shape: [[1, 1, 1], [1, 1, 1], [1, 1, 1]] },
+      { name: '断臂维纳斯像',   icon: '🗿', tags: ['art'],        baseAppeal: 800, shape: [[1, 1, 1], [1, 1, 1], [1, 1, 1]] },
+      { name: '恐龙胚胎化石',   icon: '🥚', tags: ['paleo'],      baseAppeal: 760, shape: [[1, 1], [1, 1]] },
+      { name: '翡翠蝈蝈白菜',   icon: '🥬', tags: ['flora', 'art'], baseAppeal: 720, shape: [[1, 1], [1, 1]] },
+      { name: '绝迹蓝闪蝶标本', icon: '🦋', tags: ['fauna'],      baseAppeal: 700, shape: [[1, 1, 1]] },
+      { name: '陨石核心切片',   icon: '☄️', tags: ['geo'],        baseAppeal: 740, shape: [[1, 1], [1, 1]] },
+      { name: '达芬奇手稿真迹', icon: '📓', tags: ['art', 'history'], baseAppeal: 840, shape: [[1, 1], [1, 1]] },
+      { name: '曾侯乙编钟全套', icon: '🔔', tags: ['history', 'art'], baseAppeal: 860, shape: [[1, 1, 1], [1, 1, 1], [1, 1, 1]] },
+    ];
 
     // mastery 里程碑：探索度达到 10 / 25 / 50 时各提升一级
     const MASTERY_MILESTONES = [10, 25, 50];
@@ -2207,12 +2407,30 @@
 
         let actionHtml;
         if (isOpen) {
-          const tierBtns = Object.entries(EXPLORE_TIERS).map(([key, t]) => `
+          // 满探索(Lv3)解锁新模式:掘地三尺保留,精密勘察/秘境寻珍替换走马/深入
+          const maxed = site.masteryLevel >= 3;
+          const tierKeys = maxed ? ['dig', 'precision', 'secret'] : ['quick', 'deep', 'dig'];
+          const tierBtns = tierKeys.map((key) => {
+            const t = EXPLORE_TIERS[key];
+            // 秘境寻珍:25 场保底典藏进度条
+            let pityBar = '';
+            if (key === 'secret') {
+              const since = Math.min(state.secretSinceRelic ?? 0, 25);
+              const pct = Math.round((since / 25) * 100);
+              pityBar = `
+                <div class="mt-1 h-1 overflow-hidden rounded-full bg-night-700">
+                  <div class="h-full rounded-full bg-fuchsia-500 transition-all" style="width: ${pct}%"></div>
+                </div>
+                <p class="mt-0.5 text-[9px] leading-none text-fuchsia-300/80">${since >= 25 ? '👑 本场必出典藏!' : `距保底典藏 ${25 - since} 场`}</p>`;
+            }
+            return `
             <button data-explore-site="${site.id}" data-explore-tier="${key}"
-              class="rounded-lg border border-night-600 bg-night-700/60 px-1 py-1.5 text-center transition hover:border-gold-400/60 hover:text-gold-300 active:scale-95">
+              class="rounded-lg border ${key === 'secret' ? 'border-fuchsia-400/40' : 'border-night-600'} bg-night-700/60 px-1 py-1.5 text-center transition hover:border-gold-400/60 hover:text-gold-300 active:scale-95">
               <span class="block text-[11px] font-bold text-slate-200">${t.label}</span>
               <span class="block text-[10px] text-gold-600">${t.cost} 金币</span>
-            </button>`).join('');
+              ${pityBar}
+            </button>`;
+          }).join('');
           actionHtml = `<div class="mt-2 grid grid-cols-3 gap-1.5">${tierBtns}</div>`;
         } else if (slotsLeft) {
           actionHtml = `
@@ -2255,6 +2473,104 @@
      */
     const DIG_MORE_COUNT = 5;   // 续挖包固定 +5 次(价格按档位见 EXPLORE_TIERS.digMoreCost)
 
+    // —— 挖掘完成反馈:品阶色 → 飘字;完美/至臻 → 金粒子 + 金框闪烁 + 全屏大字 ——
+    const QUALITY_COLOR = {
+      fragment: '#94a3b8', damaged: '#b45309', standard: '#cbd5e1',
+      fine: '#38bdf8', perfect: '#c084fc', pristine: '#fbbf24', collectible: '#e879f9',
+    };
+
+    // 现场中央飘字(1.5s 淡出;多件同时出土时纵向错开)
+    function digFloatText(text, color, rainbow = false, duration = 1500) {
+      const host = $('#dig-float-host');
+      if (!host) return;
+      const el = document.createElement('div');
+      el.className = rainbow ? 'dig-float rainbow-text' : 'dig-float';
+      if (!rainbow) el.style.color = color;   // 彩虹模式用渐变字,不设纯色
+      el.style.top = `${38 + (host.children.length % 3) * 12}%`;
+      el.style.animation = `digFloatUp ${duration}ms ease-out forwards`;
+      el.textContent = text;
+      host.appendChild(el);
+      setTimeout(() => el.remove(), duration + 100);
+    }
+
+    // 金色粒子:从展品重心向外爆发(CSS 变量驱动扩散方向;size = 现场边长)
+    function goldBurst(centerR, centerC, size = 6) {
+      const host = $('#dig-fx-host');
+      if (!host) return;
+      const cx = ((centerC + 0.5) / size) * 100;
+      const cy = ((centerR + 0.5) / size) * 100;
+      for (let i = 0; i < 16; i++) {
+        const p = document.createElement('span');
+        p.className = 'gold-particle';
+        const ang = Math.random() * Math.PI * 2;
+        const dist = 42 + Math.random() * 96;
+        p.style.left = `${cx}%`;
+        p.style.top = `${cy}%`;
+        p.style.setProperty('--dx', `${Math.cos(ang) * dist}px`);
+        p.style.setProperty('--dy', `${Math.sin(ang) * dist}px`);
+        p.style.animationDelay = `${Math.random() * 0.15}s`;
+        host.appendChild(p);
+        setTimeout(() => p.remove(), 1200);
+      }
+    }
+
+    // 【典藏专属】彩虹大爆发:32 颗彩色粒子 × 2 波 + 白闪(震撼度拉满)
+    const RAINBOW_COLORS = ['#f87171', '#fbbf24', '#34d399', '#38bdf8', '#a78bfa', '#f472b6', '#fde68a', '#ffffff'];
+    function collectibleBurst(centerR, centerC, size = 8) {
+      const host = $('#dig-fx-host');
+      if (!host) return;
+      const cx = ((centerC + 0.5) / size) * 100;
+      const cy = ((centerR + 0.5) / size) * 100;
+      for (let wave = 0; wave < 2; wave++) {
+        for (let i = 0; i < 16; i++) {
+          const p = document.createElement('span');
+          p.className = 'gold-particle';
+          const color = RAINBOW_COLORS[Math.floor(Math.random() * RAINBOW_COLORS.length)];
+          p.style.background = `radial-gradient(circle, #ffffff 15%, ${color} 80%)`;
+          p.style.boxShadow = `0 0 10px ${color}`;
+          const ang = Math.random() * Math.PI * 2;
+          const dist = 50 + Math.random() * 130;
+          p.style.left = `${cx}%`;
+          p.style.top = `${cy}%`;
+          p.style.setProperty('--dx', `${Math.cos(ang) * dist}px`);
+          p.style.setProperty('--dy', `${Math.sin(ang) * dist}px`);
+          p.style.animationDelay = `${wave * 0.28 + Math.random() * 0.15}s`;
+          p.style.width = p.style.height = `${5 + Math.random() * 5}px`;
+          host.appendChild(p);
+          setTimeout(() => p.remove(), 1600);
+        }
+      }
+      // 全屏白闪(一次)
+      const flash = document.createElement('div');
+      flash.className = 'screen-banner';
+      flash.style.background = 'rgba(255, 255, 255, 0.35)';
+      flash.style.animation = 'bannerDim 0.5s ease-out forwards';
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 600);
+    }
+
+    // 全屏中央大字(完美/至臻专属,2.2s 淡出)
+    function screenBanner(text, duration = 2200) {
+      const el = document.createElement('div');
+      el.className = 'screen-banner';
+      el.innerHTML = `<div class="screen-banner-text" style="animation: bannerText ${duration}ms ease-out forwards">${text}</div>`;
+      el.style.animation = `bannerDim ${duration}ms ease-out forwards`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), duration + 100);
+    }
+
+    // 宝藏重心(占据格的平均位置 → 粒子爆发中心)
+    function treasureCenter(tr) {
+      let sr = 0, sc = 0, n = 0;
+      const S = tr.mask.length;   // 现场尺寸随宝藏 mask 走(6 / 8)
+      for (let r = 0; r < S; r++) {
+        for (let c = 0; c < S; c++) {
+          if (tr.mask[r][c]) { sr += r; sc += c; n += 1; }
+        }
+      }
+      return n ? { r: Math.round(sr / n), c: Math.round(sc / n) } : { r: tr.row, c: tr.col };
+    }
+
     // 开启挖掘场次:闸门校验 → 扣费 → 探索度 → 生成现场 → 弹模态
     function openDigSession(siteId, tierKey) {
       const tier = EXPLORE_TIERS[tierKey];
@@ -2267,16 +2583,23 @@
         toast('🗺️ 该区域今日未开放 —— 每天只有 2 个区域能挖');
         return;
       }
-      if (state.funds < tier.cost) {
+      // 【探索研究 Lv1】每日第一次探索免费
+      const freeExplore = (state.research.explore ?? 0) >= 1 && state.freeExploreDay !== state.day;
+      if (!freeExplore && state.funds < tier.cost) {
         toast(`💸 资金不足：「${tier.label}」需要 ${tier.cost} 金币`);
         return;
       }
-      if (getWarehouseItems().length >= state.warehouseCapacity) {
+      if (getWarehouseItems().length >= getWarehouseCapacity()) {
         toast('📦 仓库已满：先上架几件，再开挖');
         return;
       }
 
-      state.funds -= tier.cost;
+      if (freeExplore) {
+        state.freeExploreDay = state.day;
+        toast('🆓 探索研究加成：今日第一次探索免费！');
+      } else {
+        state.funds -= tier.cost;
+      }
       state.totalExplores += 1;
 
       const site = EXPLORE_SITES.find((s) => s.id === siteId);
@@ -2319,35 +2642,50 @@
         : null;
       if (forcedQuality) state.activeEffects.nextQuality -= 1;
 
-      // —— 布置现场：6×6 泥土 + 随机埋入宝藏(不重叠/不出界) ——
-      const taken = Array.from({ length: 6 }, () => Array(6).fill(false));
+      // —— 布置现场:6×6(旧模式)/ 8×8(满探索新模式)泥土 + 随机埋入宝藏(不重叠/不出界) ——
+      const size = tier.size ?? 6;
+      // 【满探索新模式】典藏判定:精密勘察 1% / 秘境寻珍 3%(总研究 Lv3 ×1.2);秘境 25 场保底
+      let collectibleTpl = null;
+      if (tier.collectibleChance) {
+        state.secretSinceRelic = (state.secretSinceRelic ?? 0) + 1;
+        const mult = (state.research.general ?? 0) >= 3 ? 1.2 : 1;
+        const chance = tier.collectibleChance * mult;
+        if (Math.random() < chance || state.secretSinceRelic >= 25) {
+          collectibleTpl = COLLECTIBLE_POOL[Math.floor(Math.random() * COLLECTIBLE_POOL.length)];
+          state.secretSinceRelic = 0;
+          toast('👑 这片土地下埋着一件【典藏】级的传说之藏……');
+        }
+      }
+      const taken = Array.from({ length: size }, () => Array(size).fill(false));
       const treasures = [];
       for (let i = 0; i < specs.length; i++) {
         const spec = specs[i];
-        const tpl = rollTemplate(site);
+        // 【典藏】本场命中 → 第一个宝藏位替换为典藏藏品(固定品阶/形状/基础吸引力)
+        const isCollectible = i === 0 && collectibleTpl;
+        const tpl = isCollectible ? collectibleTpl : rollTemplate(site);
         // 【特化研究 Lv2】藏品任一标签研究 ≥2 → 高品阶权重增加 + 成色至少「普通」
         const itemBuffs = [...buffs];
-        const lv2Tag = tpl.tags.some((k) => (state.research.special[k] ?? 0) >= 2);
+        const lv2Tag = !isCollectible && tpl.tags.some((k) => (state.research.special[k] ?? 0) >= 2);
         if (lv2Tag) itemBuffs.push({ qualityWeight: { fine: 1.2, perfect: 1.2, pristine: 1.2 } });
-        let quality = (i === 0 && forcedQuality) ? forcedQuality : rollQualityFromTemplate(tpl, itemBuffs);
-        if (lv2Tag && !isQualityAtLeast(quality, 'standard')) quality = 'standard';
+        let quality = isCollectible ? 'collectible' : (i === 0 && forcedQuality) ? forcedQuality : rollQualityFromTemplate(tpl, itemBuffs);
+        if (lv2Tag && !isCollectible && !isQualityAtLeast(quality, 'standard')) quality = 'standard';
         // 【特化研究 Lv1】藏品任一标签研究 ≥1 → 成色至少「破损」
-        if (tpl.tags.some((k) => (state.research.special[k] ?? 0) >= 1) && !isQualityAtLeast(quality, 'damaged')) quality = 'damaged';
-        const shape = pickShapeFromLib(SHAPES[spec.lib]);
+        if (!isCollectible && tpl.tags.some((k) => (state.research.special[k] ?? 0) >= 1) && !isQualityAtLeast(quality, 'damaged')) quality = 'damaged';
+        const shape = isCollectible ? collectibleTpl.shape : pickShapeFromLib(SHAPES[spec.lib]);
         let placed = null;
         for (let attempt = 0; attempt < 300 && !placed; attempt++) {
-          const row = Math.floor(Math.random() * 6);
-          const col = Math.floor(Math.random() * 6);
+          const row = Math.floor(Math.random() * size);
+          const col = Math.floor(Math.random() * size);
           let fits = true;
           for (let r = 0; r < shape.length && fits; r++) {
             for (let c = 0; c < shape[r].length && fits; c++) {
-              if (shape[r][c] && (row + r >= 6 || col + c >= 6 || taken[row + r][col + c])) fits = false;
+              if (shape[r][c] && (row + r >= size || col + c >= size || taken[row + r][col + c])) fits = false;
             }
           }
           if (fits) placed = { row, col };
         }
         if (!placed) continue;   // 放不下就跳过(场地太挤)
-        const mask = Array.from({ length: 6 }, () => Array(6).fill(false));
+        const mask = Array.from({ length: size }, () => Array(size).fill(false));
         for (let r = 0; r < shape.length; r++) {
           for (let c = 0; c < shape[r].length; c++) {
             if (shape[r][c]) {
@@ -2357,9 +2695,9 @@
           }
         }
         treasures.push({
-          tpl, quality, shape,
+          tpl, quality, shape, baseAppeal: isCollectible ? collectibleTpl.baseAppeal : undefined,
           row: placed.row, col: placed.col,
-          mask, dugMask: Array.from({ length: 6 }, () => Array(6).fill(false)),
+          mask, dugMask: Array.from({ length: size }, () => Array(size).fill(false)),
           revealed: false, done: false,
         });
       }
@@ -2374,12 +2712,19 @@
       pe.revealAll = false;
       const bonusDigs = pe.extraDigs ?? 0;
       pe.extraDigs = 0;
+      // 【探索研究】Lv2:开场显示随机一个宝藏轮廓 + 每场初始次数 +2;Lv3:镐子 2×2(无额外次数)
+      const eLv = state.research.explore ?? 0;
+      const exploreBonus = eLv >= 2 ? 2 : 0;
+      if (eLv >= 2 && treasures.length) {
+        treasures[Math.floor(Math.random() * treasures.length)].revealed = true;
+      }
 
       state.digSession = {
         siteName: site.name, tierKey, tierLabel: tier.label,
         treasures,
-        dug: Array.from({ length: 6 }, () => Array(6).fill(false)),   // 空坑记录
-        digsLeft: tier.digs + bonusDigs, digsTotal: tier.digs + bonusDigs,
+        dug: Array.from({ length: size }, () => Array(size).fill(false)),   // 空坑记录
+        size,   // 现场尺寸(6 / 8)—— 挖掘/渲染/预览全链参数化
+        digsLeft: tier.digs + bonusDigs + exploreBonus, digsTotal: tier.digs + bonusDigs + exploreBonus,
         levelUpMsg: site.masteryLevel > oldLevel
           ? `⭐ 「${site.name}」探索度达到 ${site.explorationCount}，探索等级提升至 Lv${site.masteryLevel}！`
           : null,
@@ -2398,6 +2743,10 @@
       renderTop();
       renderDailySites();  // 探索度 / 增益提示刷新
       openDigModal();
+      // 【新手教程】step 1 → 2:进入挖掘现场,引导挖掘
+      if (state.tutorialStep === 1) advTutorial(2, '点击泥土，挖开它。如果挖掘到藏品的一部分，那么它的剩余部分会被高亮。', '#dig-grid');
+      // 【一次性】首次秘境寻珍
+      if (tierKey === 'secret') oneTip('secret', '听说......这里有机会找到传说中的展品。');
     }
 
     // 挖掘核心:挖开一格(free = 炸药免次数)。幸运护符在第一件出土时消费。
@@ -2407,6 +2756,11 @@
       const tr = s.treasures.find((t) => t.mask[row][col]);
       const alreadyDug = tr ? tr.dugMask[row][col] : s.dug[row][col];
       if (alreadyDug) return;   // 挖过的格子不重复扣次数
+
+      // 【新手教程】step 2 → 3:玩家已操作挖掘 → 直接引导上架(不必等挖完/收工)
+      if (state.tutorialStep === 2) {
+        advTutorial(3, '不错的第一步！把它放进你的展厅。', '#panel-warehouse');
+      }
 
       if (!free) {
         if (s.digsLeft <= 0) {
@@ -2431,9 +2785,28 @@
             charmTag = tr.quality !== oldQ ? ' 🍀护符生效！' : '';
           }
           const it = makeItem(tr.tpl.name, tr.tpl.icon, [...tr.tpl.tags], tr.quality, tr.shape);   // 入台账 → 自动进仓库;个体波动自动赋予
+          if (tr.quality === 'collectible') it.baseAppeal = tr.baseAppeal ?? 600;   // 典藏:基础吸引力由藏品自带
           renderWarehouse();
           renderAppealStats();
           updatePriceUI();
+          // —— 挖掘完成反馈:品阶色飘字;完美/至臻 → 金粒子;典藏 → 彩虹大爆发 + 彩虹框 + 彩虹大字 ——
+          const qColor = QUALITY_COLOR[tr.quality] ?? '#cbd5e1';
+          const isCol = tr.quality === 'collectible';
+          digFloatText(`获得:${tr.tpl.name}(${QUALITY[tr.quality].label})`, isCol ? null : qColor, isCol, isCol ? 2500 : 1500);
+          if (tr.quality === 'perfect' || tr.quality === 'pristine' || isCol) {
+            const center = treasureCenter(tr);
+            if (isCol) {
+              collectibleBurst(center.r, center.c, s.size ?? 6);
+              tr.flashUntil = Date.now() + 1500;   // 彩虹框闪烁 1.5s
+            } else {
+              goldBurst(center.r, center.c, s.size ?? 6);
+              tr.flashUntil = Date.now() + 1000;
+            }
+            const bannerText = isCol
+              ? `<span class="rainbow-text">【${tr.tpl.name}】👑 典藏！！</span>`
+              : `【${tr.tpl.name}】✨ ${QUALITY[tr.quality].label}${tr.quality === 'pristine' ? '！！' : '！'}`;
+            screenBanner(bannerText, isCol ? 2500 : 2200);   // 典藏大字停留 2.5s
+          }
           toast(`🏅 出土「${tr.tpl.name}」[${QUALITY[tr.quality].label} ✨${fmt(effAppeal(it))}] 已入仓库！${charmTag}`);
         } else {
           toast('✨ 挖到宝藏的一角！轮廓已显现 —— 把它的所有格子都挖开吧');
@@ -2443,15 +2816,76 @@
       }
       renderDigModal();
 
-      // 场次完成:所有宝藏都已出土 → 自动收工
-      if (s.treasures.length && s.treasures.every((t) => t.done)) {
-        endDigSession(true);
+      // 场次完成:所有宝藏都已出土 → 延迟 1.5s 自动收工(留出时间看飘字/粒子/大字);
+      // 期间玩家手动「结束探索」则立即收工,定时器作废
+      if (s.treasures.length && s.treasures.every((t) => t.done) && !s.autoClosing) {
+        s.autoClosing = true;
+        setTimeout(() => {
+          if (state.digSession === s) endDigSession(true);
+        }, 1500);
+      }
+    }
+
+    // —— 镐子挖掘系统(探索研究线):点击格 = 起点,按镐形状展开 ——
+    // 越界/已挖格只跳过不扣次;次数按实际挖开格数扣,不足时挖到次数尽为止
+    function pickaxeShape() {
+      const lv = state.research.explore ?? 0;
+      if (lv >= 3) return [[1, 1, 1, 1]];   // 1×4 横
+      if (lv === 2) return [[1, 1, 1]];       // 1×3 横
+      if (lv === 1) return [[1, 1]];          // 1×2 横
+      return [[1]];                            // Lv0:单格
+    }
+
+    // 悬停预览:绿色 = 将挖开,灰色 = 已挖/越界(mouseover/mouseout 委托驱动)
+    function clearPickPreview() {
+      document.querySelectorAll('.pick-preview-ok, .pick-preview-no').forEach((el) => {
+        el.classList.remove('pick-preview-ok', 'pick-preview-no');
+      });
+    }
+    function previewPick(row, col) {
+      const s = state.digSession;
+      if (!s) return;
+      const shape = pickaxeShape();
+      const S = s.size ?? 6;
+      for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+          const gr = row + r, gc = col + c;
+          if (gr >= S || gc >= S) continue;
+          const btn = document.querySelector(`[data-dig-cell="${gr},${gc}"]`);
+          if (!btn) continue;
+          const tr = s.treasures.find((t) => t.mask[gr][gc]);
+          const dug = tr ? tr.dugMask[gr][gc] : s.dug[gr][gc];
+          btn.classList.add(dug ? 'pick-preview-no' : 'pick-preview-ok');
+        }
       }
     }
 
     function digAt(row, col) {
-      if (!state.digSession) return;
-      digCell(row, col, false);
+      const s = state.digSession;
+      if (!s) return;
+      const shape = pickaxeShape();
+      // 覆盖格(界内)
+      const cells = [];
+      for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+          const gr = row + r, gc = col + c;
+          const S = s.size ?? 6;
+          if (gr < S && gc < S) cells.push([gr, gc]);
+        }
+      }
+      // 过滤已挖(已挖格跳过不重复挖)
+      const fresh = cells.filter(([gr, gc]) => {
+        const tr = s.treasures.find((t) => t.mask[gr][gc]);
+        return tr ? !tr.dugMask[gr][gc] : !s.dug[gr][gc];
+      });
+      if (!fresh.length) return;   // 全部已挖:无操作
+      // 【单次计费】每次挖掘只扣 1 次(形状内全挖)—— 精准规划不白费次数
+      if (s.digsLeft <= 0) {
+        toast('⛏️ 挖掘次数用完了 —— 花金币续挖，或收工带走已出土的');
+        return;
+      }
+      s.digsLeft -= 1;
+      for (const [gr, gc] of fresh) digCell(gr, gc, true);
     }
 
     function buyDigs() {
@@ -2497,8 +2931,9 @@
       $('#btn-dig-more').textContent = `⛏️ 续挖 ${DIG_MORE_COUNT} 次 · ${tier.digMoreCost} 金币`;
 
       let html = '';
-      for (let r = 0; r < 6; r++) {
-        for (let c = 0; c < 6; c++) {
+      const size = s.size ?? 6;   // 现场尺寸(6 / 8)
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
           const tr = s.treasures.find((t) => t.mask[r][c]);
           let cls = '';
           let content = '';
@@ -2506,6 +2941,8 @@
           if (tr && tr.done) {
             cls = 'border-amber-400/70 bg-amber-400/20 cursor-default';
             content = (tr.row === r && tr.col === c) ? tr.tpl.icon : '';
+            // 【完美/至臻】出土瞬间金框闪烁 1s(flashUntil 由 digCell 设置)
+            if (tr.flashUntil && Date.now() < tr.flashUntil) cls += tr.quality === 'collectible' ? ' collectible-flash' : ' gold-flash';
           } else if (tr && tr.dugMask[r][c]) {
             cls = 'border-amber-400/80 bg-amber-400/30 cursor-default';
             content = '✦';
@@ -2523,13 +2960,18 @@
             : `<div class="aspect-square rounded-md border ${cls} text-[10px] leading-none flex items-center justify-center">${content}</div>`;
         }
       }
-      $('#dig-grid').innerHTML = html;
+      const gridEl = $('#dig-grid');
+      gridEl.innerHTML = html;
+      gridEl.style.gridTemplateColumns = `repeat(${size}, minmax(0, 1fr))`;   // 8×8 现场自动收窄列宽
 
+      // 镐子规格提示(探索研究线)
+      const pick = pickaxeShape();
+      const pickText = `⛏️ 当前镐子:${pick[0].length}×${pick.length}${(state.research.explore ?? 0) >= 1 ? '(悬停格子可预览挖掘范围)' : ''}`;
       $('#dig-hint').textContent = s.digsLeft <= 0 && remaining > 0
-        ? '⏳ 挖掘次数用完了 —— 花点金币继续，或收工带走已出土的'
+        ? `${pickText} —— ⏳ 次数用完了，花点金币继续，或收工带走已出土的`
         : remaining > 0
-          ? `已出土 ${dugCount} 件，场内还有 ${remaining} 件宝藏待挖（挖到一角即可看见轮廓）`
-          : '现场清理完毕！';
+          ? `${pickText} —— 已出土 ${dugCount} 件，场内还有 ${remaining} 件宝藏待挖（挖到一角即可看见轮廓）`
+          : `现场清理完毕！`;
     }
 
     function openDigModal() {
@@ -2717,6 +3159,11 @@
       }
       zone.placed.push({ exhibitId, row, col });
       const cells = it.shape.flat().filter(Boolean).length;
+      // 【新手教程】step 3 → 4:第一件展品上架完成
+      if (state.tutorialStep === 3) {
+        advTutorial(4, '你的博物馆终于有第一件展品了。先休息吧，明天试试给它规划一条游客动线。');
+        hideTutorialTip();   // 本步无高亮目标,收起浮窗只留金币奖励
+      }
       return { ok: true, msg: `「${it.name}」上架成功（占 ${cells} 格），吸引力 +${fmt(effAppeal(it))}` };
     }
 
@@ -2882,6 +3329,8 @@
       renderAppealStats();
       updatePriceUI();
       toast(`🛤️ 游客动线已保存！与动线相邻的展品开始生效${evicted.length ? `（⚠️ 已自动撤回压在动线上的展品：${evicted.join('、')}）` : ''}`);
+      // 【新手教程】step 5 → 6:动线保存完成,引导门票定价
+      if (state.tutorialStep === 5) advTutorial(6, '调整门票价格，看看预估收入。门票越贵，游客越少——反之亦然。', '#price-slider');
     }
 
     // 展厅扩建：4×8 → 6×8 → 8×8(数值待平衡);终点随之移动,旧动线可能失效
@@ -3195,6 +3644,14 @@
         ? `<button data-enable-blackgold="${hallId}" class="mt-2 w-full rounded-lg border border-amber-400/60 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-300 transition hover:bg-amber-500/20">🖤 启用中央大厅「黑金外观」</button>`
         : (state.blackGold[hallId] ? '<p class="mt-2 text-[11px] text-amber-300/80">🖤 中央大厅黑金外观已启用</p>' : '');
 
+      // 探索研究(镐子 / 免费探索 / 加次数)
+      const eLv = state.research.explore ?? 0;
+      const eNeed = eLv < 3 ? RESEARCH_EXPLORE_REQ[eLv] : 0;
+      const eHtml = researchRowHTML(
+        '⛏️ 探索研究', eLv, 3, totalRelics(), eNeed || 1, EXPLORE_LV_TEXT[Math.min(eLv, 2)],
+        `data-invest-explore="1"`, 'text-emerald-300'
+      );
+
       // 六特化
       const specialHtml = Object.keys(TAGS).map((tag) => {
         const lv = state.research.special[tag] ?? 0;
@@ -3222,6 +3679,8 @@
           <div class="mt-2 flex flex-wrap gap-1.5">${relicsHtml}</div>
         </div>
         ${gHtml}${hallBtn}
+        <p class="pt-1 text-xs font-bold text-slate-300">⛏️ 探索研究（镐子升级 / 免费探索 / 加次数）</p>
+        ${eHtml}
         <p class="pt-1 text-xs font-bold text-slate-300">🏷️ 特化研究（每条独立,共 3 级）</p>
         ${specialHtml}`;
     }
@@ -3260,6 +3719,23 @@
       renderWarehouse();   // 容量显示刷新
       autosave();
       toast(`🔬 博物馆总研究升至 Lv${lv + 1}！${GENERAL_LV_TEXT[Math.min(lv, 2)]}`);
+    }
+
+    // 探索研究:镐子升级 / 每日首次免费 / 加次数(消耗任意碎片)
+    function investExplore() {
+      const lv = state.research.explore ?? 0;
+      if (lv >= 3) return;
+      const need = RESEARCH_EXPLORE_REQ[lv];
+      if (totalRelics() < need) {
+        toast(`🔬 碎片不足:还需 ${need - totalRelics()} 个任意碎片`, true);
+        return;
+      }
+      spendRelics(need);
+      state.research.explore = lv + 1;
+      renderResearchModal();
+      renderBag();
+      autosave();
+      toast(`⛏️ 探索研究升至 Lv${lv + 1}！${EXPLORE_LV_TEXT[Math.min(lv, 2)]}`);
     }
 
     function enableBlackGold(zoneId) {
@@ -3318,6 +3794,101 @@
       renderResearchModal();
       autosave();
       toast(`👑 大师策展「${CURATOR_TEXT[effect].name}」已绑定「${zone.themeName}」（主导标签：${TAGS[state.curator[zone.id].tag]?.label ?? '?'}）`);
+    }
+
+    /* ==========================================================
+     * 四·八、渐进式新手教程:只教第一天必须会的,后续解锁用一次性弹窗
+     * tutorialStep:0 未接手 / 1 去探索 / 2 挖掘 / 3 上架 / 4 Day1 完 / 5 动线 / 6 门票 / 7 完
+     * 每完成一步 +100 金币;tutorialSkipped = true 后全部静默;状态随存档持久化
+     * ========================================================== */
+    let tutorialTipTarget = null;
+
+    function tutActive() {
+      return !state.tutorialSkipped && (state.tutorialStep ?? 7) < 7;
+    }
+
+    function clearTutorialHighlight() {
+      if (tutorialTipTarget) {
+        tutorialTipTarget.classList.remove('tutorial-highlight');
+        tutorialTipTarget = null;
+      }
+    }
+
+    // 显示引导浮窗:定位到目标元素下方(超右边界自动收),目标加脉冲高亮
+    function showTutorialTip(text, targetSel) {
+      if (state.tutorialSkipped) return;
+      clearTutorialHighlight();
+      const tip = $('#tutorial-tip');
+      $('#tutorial-tip-text').textContent = text;
+      tip.classList.remove('hidden');
+      let target = targetSel ? document.querySelector(targetSel) : null;
+      if (target) {
+        target.classList.add('tutorial-highlight');
+        tutorialTipTarget = target;
+        const r = target.getBoundingClientRect();
+        const left = Math.max(12, Math.min(window.innerWidth - 352, r.left + r.width / 2 - 170));
+        tip.style.left = `${left}px`;
+        tip.style.top = `${Math.min(window.innerHeight - 140, r.bottom + 10)}px`;
+      } else {
+        // 无目标:屏幕居中偏下
+        tip.style.left = '50%';
+        tip.style.top = '62%';
+        tip.style.transform = 'translateX(-50%)';
+      }
+    }
+
+    function hideTutorialTip() {
+      $('#tutorial-tip').classList.add('hidden');
+      clearTutorialHighlight();
+    }
+
+    // 步骤推进:+100 金币奖励 → 显示下一步引导
+    function advTutorial(step, text, targetSel) {
+      state.tutorialStep = step;
+      state.funds += 100;
+      renderTop();
+      showTutorialTip(text, targetSel);
+    }
+
+    // 开场信(新档 step 0)
+    function showTutorialLetter() {
+      const o = $('#tutorial-letter');
+      o.classList.remove('hidden');
+      o.classList.add('flex');
+    }
+    function acceptLetter() {
+      const o = $('#tutorial-letter');
+      o.classList.add('hidden');
+      o.classList.remove('flex');
+      advTutorial(1, '每天有三个区域对你开放，你可以选择其中两个作为今日的目标。点击这里，去探索第一件展品。', '#daily-sites');
+    }
+
+    // 载入/跨天后的教程状态恢复:按 step 显示对应引导
+    function tutorialBootstrap() {
+      if (state.tutorialSkipped || (state.tutorialStep ?? 7) >= 7) return;
+      const step = state.tutorialStep ?? 0;
+      if (step === 0) { showTutorialLetter(); return; }
+      if (step === 1) showTutorialTip('每天有三个区域对你开放，你可以选择其中两个作为今日的目标。点击这里，去探索第一件展品。', '#daily-sites');
+      else if (step === 2) showTutorialTip('点击泥土，挖开它。如果挖掘到藏品的一部分，那么它的剩余部分会被高亮。', '#dig-grid');
+      else if (step === 3) showTutorialTip('不错的第一步！把它放进你的展厅。', '#panel-warehouse');
+      else if (step === 4 && state.day >= 2) advTutorial(5, '我们需要一条新的动线。左上是博物馆的大门，右下则是出口。画一条从左上角到右下角的动线，游客会沿着它参观。如果展品不与动线相邻，将不会生效。', '[data-path-act="draw"]');
+      else if (step === 5) showTutorialTip('我们需要一条新的动线。左上是博物馆的大门，右下则是出口。画一条从左上角到右下角的动线，游客会沿着它参观。如果展品不与动线相邻，将不会生效。', '[data-path-act="draw"]');
+      else if (step === 6) showTutorialTip('调整门票价格，看看预估收入。门票越贵，游客越少——反之亦然。', '#price-slider');
+    }
+
+    // 一次性系统解锁弹窗(只弹一次;跳过教程则静默)
+    function oneTip(key, text, highlightSel) {
+      if (state.tutorialSkipped || state.seenTips?.[key]) return;
+      state.seenTips = state.seenTips ?? {};
+      state.seenTips[key] = true;
+      $('#onetip-text').textContent = text;
+      const o = $('#onetip-modal');
+      o.classList.remove('hidden');
+      o.classList.add('flex');
+      if (highlightSel) {
+        const t = document.querySelector(highlightSel);
+        if (t) { t.classList.add('tutorial-highlight'); setTimeout(() => t.classList.remove('tutorial-highlight'), 4000); }
+      }
     }
 
     /* ==========================================================
@@ -3457,6 +4028,7 @@
     function grantRatingReward(grade) {
       const def = RATING_EXHIBITS[`rating_${grade}`];
       const it = makeItem(def.name, def.icon, [...def.tags], def.quality, def.shape);
+      if (def.baseAppeal) it.baseAppeal = def.baseAppeal;   // 典藏评级奖励:基础吸引力由藏品自带
       it.individualFactor = 1.0;
       it.rating = grade;
       renderWarehouse();
@@ -3508,6 +4080,12 @@
       delete s.pathDrawing;   // 动线草稿(临时态,不存)
       delete s.placing;       // 选位模式(临时态)
       delete s.digSession;    // 挖掘现场(交付后随 endDigSession 入档)
+      // —— 非 state 的运行时状态:探索度存在常量数组 EXPLORE_SITES 的元素上,必须随档保存 ——
+      s.siteProgress = EXPLORE_SITES.map((site) => ({
+        id: site.id,
+        explorationCount: site.explorationCount,
+        masteryLevel: site.masteryLevel,
+      }));
       return s;
     }
 
@@ -3572,6 +4150,14 @@
         patched += before - z.placed.length;
       }
       if (patched) toast(`🩹 已修复损坏存档：剔除 ${patched} 个悬空展位（对应展品在早期版本中丢失）`);
+      // —— 恢复探索度:EXPLORE_SITES 是常量数组,探索度存在元素上,必须从档内回填 ——
+      for (const p of slot.gameData.siteProgress ?? []) {
+        const site = EXPLORE_SITES.find((s) => s.id === p.id);
+        if (site) {
+          site.explorationCount = p.explorationCount ?? 0;
+          site.masteryLevel = p.masteryLevel ?? 0;
+        }
+      }
       // 存档迁移:版本迭代新增的展区自动补齐(锁定态入档,不破坏旧进度)
       if (freshGameData) {
         for (const fz of freshGameData.zones) {
@@ -3581,6 +4167,10 @@
           }
         }
       }
+      // 【新手教程】旧档迁移:无教程字段的档视为已完成教程(老玩家不再被引导),一次性弹窗照常触发
+      state.tutorialStep ??= 7;
+      state.tutorialSkipped ??= false;
+      state.seenTips ??= {};
     }
 
     function renderSaveList(targetId) {
@@ -3682,6 +4272,7 @@
       updatePriceUI();
       renderDailySites();
       toast(`📂 已进入「${slot.name}」`);
+      tutorialBootstrap();   // 【新手教程】按档内进度恢复引导(旧档迁移到"教程完")
     }
 
     // 新建存档:全新开局快照入槽并立即进入
@@ -3708,6 +4299,7 @@
       updatePriceUI();
       renderDailySites();
       toast(`🆕 新存档「${slot.name}」已创建`);
+      tutorialBootstrap();   // 【新手教程】新档:开场信 → Day1 引导
     }
 
     function exportSave(slotId) {
@@ -3790,10 +4382,17 @@
       // 结算完成:lastZoneSettlementDay = day,并弹出结果汇总
       if (state.day % 5 === 1) {
         runZoneAttributeSettlement();
+        // 【一次性】首次展区结算 → 提示演化系统
+        oneTip('settlement', '每 5 天，你的展区会根据展品标签演化成不同的样子，尽情探索吧。');
       }
 
       // —— 每日轮换（3 选 2）：结算后随机抽 3 个候选，等玩家挑 2 个开放 ——
       rollSiteChoices();
+
+      // 【新手教程】Day 1 完 → Day 2 开始:引导规划动线
+      if (state.tutorialStep === 4 && !state.tutorialSkipped) {
+        advTutorial(5, '我们需要一条新的动线。左上是博物馆的大门，右下则是出口。画一条从左上角到右下角的动线，游客会沿着它参观。如果展品不与动线相邻，将不会生效。', '[data-path-act="draw"]');
+      }
 
       // —— 神秘商人判定（三段：新手剧情 → 剧情停留 → 普通 23% 掷骰） ——
       if (state.day === 2 && !state.merchant.storyDone) {
@@ -4101,6 +4700,25 @@
         salvageInvert();
         return;
       }
+      // 新手教程:开场信接手 / 跳过 / 一次性弹窗关闭
+      if (e.target.closest('#btn-letter-accept')) {
+        acceptLetter();
+        return;
+      }
+      const tutSkip = e.target.closest('[data-tutorial-skip]');
+      if (tutSkip) {
+        if (!confirm('跳过教程后，将不再显示引导提示。确定吗？')) return;
+        state.tutorialSkipped = true;
+        hideTutorialTip();
+        toast('⏭️ 教程已跳过 —— 随时可以在存档管理里重新查看进度');
+        return;
+      }
+      if (e.target.closest('#btn-onetip-ok')) {
+        const o = $('#onetip-modal');
+        o.classList.add('hidden');
+        o.classList.remove('flex');
+        return;
+      }
       // 研究所:面板开关 / 投入碎片 / 黑金启用 / 策展三选一
       if (e.target.closest('#btn-research')) {
         openResearchModal();
@@ -4117,6 +4735,10 @@
       }
       if (e.target.closest('[data-invest-general]')) {
         investGeneral();
+        return;
+      }
+      if (e.target.closest('[data-invest-explore]')) {
+        investExplore();
         return;
       }
       const enBg = e.target.closest('[data-enable-blackgold]');
@@ -4262,9 +4884,13 @@
         useItem(use.dataset.useItem);
         return;
       }
-      // 右侧标签页切换
+      // 右侧标签页切换(研究 Tab 特殊:打开研究面板弹窗)
       const tab = e.target.closest('[data-right-tab]');
       if (tab) {
+        if (tab.dataset.rightTab === 'research') {
+          openResearchModal();
+          return;
+        }
         state.rightTab = tab.dataset.rightTab;
         renderRightPanel();
         return;
@@ -4355,6 +4981,18 @@
       }
     });
 
+    // 镐子悬停预览:绿 = 将挖开,灰 = 已挖/越界(mouseover/mouseout 委托)
+    document.addEventListener('mouseover', (e) => {
+      const cell = e.target.closest('[data-dig-cell]');
+      if (!cell || !state.digSession) return;
+      const [r, c] = cell.dataset.digCell.split(',').map(Number);
+      clearPickPreview();
+      previewPick(r, c);
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest('[data-dig-cell]')) clearPickPreview();
+    });
+
     // 分馆标签页：点击切换当前查看的展区（未解锁也可点 → 进去看解锁条件）
     $('#zone-tabs').addEventListener('click', (e) => {
       const btn = e.target.closest('[data-zone-id]');
@@ -4396,6 +5034,8 @@
         writeSaveIndex(idx);
         activeSaveId = slot.id;
         toast('💾 已自动创建存档「拾光小馆」—— 进度将自动保存');
+        // 【新手教程】新档:开场信(接手后进入探索引导)
+        tutorialBootstrap();
         return;
       }
       showTitleScreen();   // 有存档:标题界面 → 存档选择
