@@ -1527,12 +1527,21 @@
               (!down && !left) ? 'rounded-bl-md' : '',
               (!down && !right) ? 'rounded-br-md' : '',
             ].join(' ');
-            // 【典藏】底板 = 静态彩虹渐变(低饱和暗调,可读性优先);其它品阶 = 品阶色 20% 混合
-            const blockBg = it.quality === 'collectible'
-              ? 'linear-gradient(135deg, rgba(248,113,113,0.30), rgba(251,191,36,0.26), rgba(52,211,153,0.26), rgba(56,189,248,0.28), rgba(167,139,250,0.30), rgba(244,114,182,0.30))'
-              : 'linear-gradient(color-mix(in srgb, var(--rc) 20%, transparent), color-mix(in srgb, var(--rc) 20%, transparent))';
+            // 【典藏】底板 = 静态彩虹渐变,且按展品 bounding 切片(sprite 技术):
+            // 每格的 background-size = 展品整体尺寸、position 对齐自身偏移 → 渐变横跨全展品连续,
+            // 而不是每格各来一条小彩虹。其它品阶 = 品阶色 20% 混合。
+            const exW = Math.max(...it.shape.map((r) => r.length));
+            const exH = it.shape.length;
+            let blockBgImage = 'linear-gradient(color-mix(in srgb, var(--rc) 20%, transparent), color-mix(in srgb, var(--rc) 20%, transparent))';
+            let blockBgSize = 'auto';
+            let blockBgPos = '0 0';
+            if (it.quality === 'collectible') {
+              blockBgImage = 'linear-gradient(135deg, rgba(248,113,113,0.30), rgba(251,191,36,0.26), rgba(52,211,153,0.26), rgba(56,189,248,0.28), rgba(167,139,250,0.30), rgba(244,114,182,0.30))';
+              blockBgSize = `${exW * 100}% ${exH * 100}%`;
+              blockBgPos = `${(c / Math.max(1, exW - 1)) * 100}% ${(r / Math.max(1, exH - 1)) * 100}%`;
+            }
             cells += `
-              <div style="grid-area:${gr + 1} / ${gc + 1}; border-top-style:${side(up)};border-right-style:${side(right)};border-bottom-style:${side(down)};border-left-style:${side(left)};border-color: var(--rc); background-color: #10141f; background-image: ${blockBg};"
+              <div style="grid-area:${gr + 1} / ${gc + 1}; border-top-style:${side(up)};border-right-style:${side(right)};border-bottom-style:${side(down)};border-left-style:${side(left)};border-color: var(--rc); background-color: #10141f; background-image: ${blockBgImage}; background-size: ${blockBgSize}; background-position: ${blockBgPos};"
                 class="quality-${it.quality} relative z-10 pointer-events-none flex items-center justify-center ${connected ? '' : 'opacity-40 grayscale'} ${corners}"></div>`;
           }
         }
